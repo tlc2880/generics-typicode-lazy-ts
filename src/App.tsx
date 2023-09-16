@@ -2,14 +2,17 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import List from "./List"
 
-import { usersType, todosType } from './app.Types'
+import { usersType, todosType, postsType } from './app.Types'
 
 function App() {
   const [users, setUsers] = useState([]);
   const [todos, setTodos] = useState([]);
+  const [posts, setPosts] = useState([]);
 
+  // @ts-ignore
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedTodos, setSelectedTodos] = useState([]);
+  const [selectedPosts, setSelectedPosts] = useState([]);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -19,13 +22,19 @@ function App() {
     fetch("https://jsonplaceholder.typicode.com/todos")
       .then((res) => res.json())
       .then((result) => setTodos(result));
+
+      fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => res.json())
+      .then((result) => setPosts(result));
   }, []);
 
   const selectUser = (id: number) => {
      const filterTodos = todos.filter((u: todosType) => u.userId === id);
+     const filterPosts = posts.filter((u: postsType) => u.userId === id);
 
     setSelectedUser(id.toString());
     setSelectedTodos(filterTodos);
+    setSelectedPosts(filterPosts);
 
   };
   return (
@@ -50,7 +59,7 @@ function App() {
       </table>
 
       <List items={selectedTodos} />
-
+      <List items={selectedPosts} />
     </>
   )
 }
